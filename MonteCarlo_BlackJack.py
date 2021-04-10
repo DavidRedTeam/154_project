@@ -16,8 +16,6 @@ import array
 import matplotlib.pyplot as plt
 import numpy as np
 #import pandas as pd
-
-
 lose = 0
 win = 0
 ranks = {
@@ -176,7 +174,7 @@ def policyFour():
 def main():
     global lose
     global win
-    single_policy_1()
+    # single_policy_1()
     for i in range(1000):
         if (single_policy_1() == True):
             win += 1
@@ -184,32 +182,21 @@ def main():
             lose += 1
     print("Wins: ",  win, "Loses: ",  lose)
 
+    labels = ['losses', 'wins']
+    wins = [win]
+    losses = [lose]
 
-labels = ['losses', 'wins']
-men_means = [20]
-women_means = [25]
+    width = 0.35       # the width of the bars: can also be len(x) sequence
 
-x = np.arange(len(labels))  # the label locations
-width = 0.35  # the width of the bars
+    fig, ax = plt.subplots()
 
-fig, ax = plt.subplots()
-rects1 = ax.bar(x - width/2, men_means, width, label='win')
-rects2 = ax.bar(x + width/2, women_means, width, label='losses')
+    ax.bar(labels[1], wins, width,  label='wins')
+    ax.bar(labels[0], losses, width, label='losses')
 
-# Add some text for labels, title and custom x-axis tick labels, etc.
-ax.set_ylabel('Scores')
-ax.set_title('Scores by group and gender')
-ax.set_xticks(x)
-ax.set_xticklabels(labels)
-ax.legend()
+    ax.set_title('Wins Losses using Policy 1')
+    ax.legend()
 
-#ax.bar_label(rects1, padding=3)
-ax.bar_label(rects2, padding=3)
-
-fig.tight_layout()
-
-plt.show()
-
+    plt.show()
 # wl = [win, lose]
 # print("Wins: ",  win, "Loses: ",  lose)
 # fig = plt.figure(figsize=(10, 5))
