@@ -7,7 +7,7 @@
 #
 #
 # Own Policies:
-#   4. Always Hit
+#   4. Always Hit once
 #   5. Always hit twice regardless
 #######################################################################
 import enum
@@ -81,13 +81,38 @@ class Deck:
     def __len__(self):
         return len(self.cards)
 
+
+# Used as single decks
+deck1 = Deck()
+deck1.shuffle()
+deck2 = Deck()
+deck2.shuffle()
+deck3 = Deck()
+deck3.shuffle()
+deck4 = Deck()
+deck4.shuffle()
+deck5 = Deck()
+deck5.shuffle()
+
+# Used as inf deck
+deck6 = Deck()
+deck6.shuffle()
+
+
+count = 0
 # Single = only 1 deck
 
 
 def single_policy_1():
 
-    deck = Deck()
-    deck.shuffle()
+    global deck1
+    global count
+    if deck1.__len__() < 26:
+        deck1 = Deck()
+        deck1.shuffle()
+        count += 1
+        print("DECK REFILLED, COUNT: ", count)
+
     print("SINGLE DECK POLICY 1 CALLED")
     p_hand = []
     p_value = 0
@@ -95,8 +120,8 @@ def single_policy_1():
     d_hand = []
     d_value = 0
     # Adding cards to p_hand array
-    p_hand.append(deck.deal())
-    p_hand.append(deck.deal())
+    p_hand.append(deck1.deal())
+    p_hand.append(deck1.deal())
 
     print("Player Hand at 0 and 1 is: ", p_hand[0].value, p_hand[1].value)
 
@@ -107,8 +132,8 @@ def single_policy_1():
     print("Initial Hand: ", p_hand[0].value, p_hand[1].value)
 
     # Adding cards to d_hand
-    d_hand.append(deck.deal())
-    d_hand.append(deck.deal())
+    d_hand.append(deck1.deal())
+    d_hand.append(deck1.deal())
 
     for i in range(2):
         if (d_hand[i].rank == 'ace'):
@@ -124,7 +149,7 @@ def single_policy_1():
             break
         if p_value >= 17:
             break
-        p_hand.append(deck.deal())
+        p_hand.append(deck1.deal())
         if (p_hand[i].rank == 'ace'):
             p_hand[i].value = random.choice(ranks["ace"])
         print("Card drawn: ", p_hand[i].value)
@@ -137,7 +162,7 @@ def single_policy_1():
             if d_value >= 17:
                 break
             if d_value < 17:
-                d_hand.append(deck.deal())
+                d_hand.append(deck1.deal())
                 if (d_hand[i].rank == 'ace'):
                     d_hand[i].value = random.choice(ranks["ace"])
                 print("Dealer card drawn: ", d_hand[i].value)
@@ -147,8 +172,7 @@ def single_policy_1():
     print("Player Hand Value  ",
           p_value, "Dealer Hand Value: ", d_value)
 
-    deck.print()
-    print(deck.__len__())
+    print("DECK LENGTH AT END OF POLCY: ", deck1.__len__())
     if p_value == d_value or (p_value > 21 and d_value > 21):
         return 2  # tie
     if p_value > 21 or (d_value > p_value and d_value < 22):
@@ -158,9 +182,8 @@ def single_policy_1():
 
 
 def inf_policy_1():
+    global deck6
 
-    deck = Deck()
-    deck.shuffle()
     print("INF DECK POLICY 1 CALLED")
     p_hand = []
     p_value = 0
@@ -168,11 +191,10 @@ def inf_policy_1():
     d_hand = []
     d_value = 0
     # Adding cards to p_hand array
-    p_hand.append(deck.deal())
-    p_hand.append(deck.deal())
-    deck.add_to_bottom(p_hand[0])
-    deck.add_to_bottom(p_hand[1])
-    deck.shuffle()
+    p_hand.append(deck6.deal())
+    p_hand.append(deck6.deal())
+    deck6.add_to_bottom(p_hand[0])
+    deck6.add_to_bottom(p_hand[1])
 
     print("Player Hand at 0 and 1 is: ", p_hand[0].value, p_hand[1].value)
 
@@ -183,11 +205,10 @@ def inf_policy_1():
     print("Initial Hand: ", p_hand[0].value, p_hand[1].value)
 
     # Adding cards to d_hand
-    d_hand.append(deck.deal())
-    d_hand.append(deck.deal())
-    deck.add_to_bottom(d_hand[0])
-    deck.add_to_bottom(d_hand[1])
-    deck.shuffle()
+    d_hand.append(deck6.deal())
+    d_hand.append(deck6.deal())
+    deck6.add_to_bottom(d_hand[0])
+    deck6.add_to_bottom(d_hand[1])
 
     for i in range(2):
         if (d_hand[i].rank == 'ace'):
@@ -203,14 +224,12 @@ def inf_policy_1():
             break
         if p_value >= 17:
             break
-        p_hand.append(deck.deal())
-        deck.add_to_bottom(p_hand[i])
+        p_hand.append(deck6.deal())
+        deck6.add_to_bottom(p_hand[i])
         if (p_hand[i].rank == 'ace'):
             p_hand[i].value = random.choice(ranks["ace"])
         print("Card drawn: ", p_hand[i].value)
         p_value += p_hand[i].value
-
-    deck.shuffle()
 
     # Must hit if dealer's hand is not 17+
     # Figure out sum of dealer dealt cards
@@ -219,20 +238,18 @@ def inf_policy_1():
             if d_value >= 17:
                 break
             if d_value < 17:
-                d_hand.append(deck.deal())
-                deck.add_to_bottom(d_hand[i])
+                d_hand.append(deck6.deal())
+                deck6.add_to_bottom(d_hand[i])
                 if (d_hand[i].rank == 'ace'):
                     d_hand[i].value = random.choice(ranks["ace"])
                 print("Dealer card drawn: ", d_hand[i].value)
                 print(d_value)
                 d_value += d_hand[i].value
 
-    deck.shuffle()
-
     print("Player Hand Value  ",
           p_value, "Dealer Hand Value: ", d_value)
 
-    print(deck.__len__())
+    print(deck6.__len__())
     if p_value == d_value or (p_value > 21 and d_value > 21):
         return 2  # tie
     if p_value > 21 or (d_value > p_value and d_value < 22):
@@ -242,9 +259,12 @@ def inf_policy_1():
 
 
 def single_policy_2():
+    global deck2
 
-    deck = Deck()
-    deck.shuffle()
+    if deck2.__len__() < 26:
+        deck2 = Deck()
+        deck2.shuffle()
+
     print("SINGLE DECK POLICY 2 CALLED")
     p_hand = []
     p_value = 0
@@ -252,16 +272,16 @@ def single_policy_2():
     d_hand = []
     d_value = 0
 
-    p_hand.append(deck.deal())
-    p_hand.append(deck.deal())
+    p_hand.append(deck2.deal())
+    p_hand.append(deck2.deal())
     for i in range(2):
         if (p_hand[i].rank == 'ace'):
             p_hand[i].value = random.choice(ranks["ace"])
     p_value = p_hand[0].value + p_hand[1].value
     print("Initial Hand: ", p_hand[0].value, p_hand[1].value)
 
-    d_hand.append(deck.deal())
-    d_hand.append(deck.deal())
+    d_hand.append(deck2.deal())
+    d_hand.append(deck2.deal())
 
     for i in range(2):
         if (d_hand[i].rank == 'ace'):
@@ -276,7 +296,7 @@ def single_policy_2():
             break
         if p_value >= 17 and (p_hand[0].rank != 'ace' and p_hand[1].rank != 'ace'):
             break
-        p_hand.append(deck.deal())
+        p_hand.append(deck2.deal())
         if (p_hand[i].rank == 'ace'):
             p_hand[i].value = random.choice(ranks["ace"])
         print("Card drawn: ", p_hand[i].value)
@@ -288,7 +308,7 @@ def single_policy_2():
             if d_value >= 17:
                 break
             if d_value < 17:
-                d_hand.append(deck.deal())
+                d_hand.append(deck2.deal())
                 if (d_hand[i].rank == 'ace'):
                     d_hand[i].value = random.choice(ranks["ace"])
                 print("Dealer card drawn: ", d_hand[i].value)
@@ -307,9 +327,8 @@ def single_policy_2():
 
 
 def inf_policy_2():
+    global deck6
 
-    deck = Deck()
-    deck.shuffle()
     print("INF DECK POLICY 2 CALLED")
     p_hand = []
     p_value = 0
@@ -317,11 +336,10 @@ def inf_policy_2():
     d_hand = []
     d_value = 0
 
-    p_hand.append(deck.deal())
-    p_hand.append(deck.deal())
-    deck.add_to_bottom(p_hand[0])
-    deck.add_to_bottom(p_hand[1])
-    deck.shuffle()
+    p_hand.append(deck6.deal())
+    p_hand.append(deck6.deal())
+    deck6.add_to_bottom(p_hand[0])
+    deck6.add_to_bottom(p_hand[1])
 
     for i in range(2):
         if (p_hand[i].rank == 'ace'):
@@ -329,11 +347,10 @@ def inf_policy_2():
     p_value = p_hand[0].value + p_hand[1].value
     print("Initial Hand: ", p_hand[0].value, p_hand[1].value)
 
-    d_hand.append(deck.deal())
-    d_hand.append(deck.deal())
-    deck.add_to_bottom(d_hand[0])
-    deck.add_to_bottom(d_hand[1])
-    deck.shuffle()
+    d_hand.append(deck6.deal())
+    d_hand.append(deck6.deal())
+    deck6.add_to_bottom(d_hand[0])
+    deck6.add_to_bottom(d_hand[1])
 
     for i in range(2):
         if (d_hand[i].rank == 'ace'):
@@ -354,32 +371,30 @@ def inf_policy_2():
         # if p_value >= 17 and (p_hand[1].rank == 'ace'):
         #     print("Rank of Card is: ", p_hand[1].rank)
         #     break
-        p_hand.append(deck.deal())
-        deck.add_to_bottom(p_hand[i])
+        p_hand.append(deck6.deal())
+        deck6.add_to_bottom(p_hand[i])
         if (p_hand[i].rank == 'ace'):
             p_hand[i].value = random.choice(ranks["ace"])
         print("Card drawn: ", p_hand[i].value)
         p_value += p_hand[i].value
 
-    deck.shuffle()
    # Must hit if dealer's hand is not 17+
     if p_value <= 21:
         for i in range(2, 52):
             if d_value >= 17:
                 break
             if d_value < 17:
-                d_hand.append(deck.deal())
-                deck.add_to_bottom(d_hand[i])
+                d_hand.append(deck6.deal())
+                deck6.add_to_bottom(d_hand[i])
                 if (d_hand[i].rank == 'ace'):
                     d_hand[i].value = random.choice(ranks["ace"])
                 print("Dealer card drawn: ", d_hand[i].value)
                 print(d_value)
                 d_value += d_hand[i].value
 
-    deck.shuffle()
     print("Player Hand Value  ",
           p_value, "Dealer Hand Value: ", d_value)
-
+    print(deck6.__len__())
     if p_value == d_value or (p_value > 21 and d_value > 21):
         return 2  # tie
     if p_value > 21 or (d_value > p_value and d_value < 22):
@@ -389,9 +404,12 @@ def inf_policy_2():
 
 
 def single_policy_3():
+    global deck3
 
-    deck = Deck()
-    deck.shuffle()
+    if deck3.__len__() < 26:
+        deck3 = Deck()
+        deck3.shuffle()
+
     print("SINGLE DECK POLICY 3 CALLED")
     p_hand = []
     p_value = 0
@@ -399,16 +417,16 @@ def single_policy_3():
     d_hand = []
     d_value = 0
 
-    p_hand.append(deck.deal())
-    p_hand.append(deck.deal())
+    p_hand.append(deck3.deal())
+    p_hand.append(deck3.deal())
     for i in range(2):
         if (p_hand[i].rank == 'ace'):
             p_hand[i].value = random.choice(ranks["ace"])
     p_value = p_hand[0].value + p_hand[1].value
     print("Initial Hand: ", p_hand[0].value, p_hand[1].value)
 
-    d_hand.append(deck.deal())
-    d_hand.append(deck.deal())
+    d_hand.append(deck3.deal())
+    d_hand.append(deck3.deal())
 
     for i in range(2):
         if (d_hand[i].rank == 'ace'):
@@ -422,7 +440,7 @@ def single_policy_3():
             if d_value >= 17:
                 break
             if d_value < 17:
-                d_hand.append(deck.deal())
+                d_hand.append(deck3.deal())
                 if (d_hand[i].rank == 'ace'):
                     d_hand[i].value = random.choice(ranks["ace"])
                 print("Dealer card drawn: ", d_hand[i].value)
@@ -441,9 +459,8 @@ def single_policy_3():
 
 
 def inf_policy_3():
+    global deck6
 
-    deck = Deck()
-    deck.shuffle()
     print("INF DECK POLICY 3 CALLED")
     p_hand = []
     p_value = 0
@@ -451,11 +468,10 @@ def inf_policy_3():
     d_hand = []
     d_value = 0
 
-    p_hand.append(deck.deal())
-    p_hand.append(deck.deal())
-    deck.add_to_bottom(p_hand[0])
-    deck.add_to_bottom(p_hand[1])
-    deck.shuffle()
+    p_hand.append(deck6.deal())
+    p_hand.append(deck6.deal())
+    deck6.add_to_bottom(p_hand[0])
+    deck6.add_to_bottom(p_hand[1])
 
     for i in range(2):
         if (p_hand[i].rank == 'ace'):
@@ -463,11 +479,10 @@ def inf_policy_3():
     p_value = p_hand[0].value + p_hand[1].value
     print("Initial Hand: ", p_hand[0].value, p_hand[1].value)
 
-    d_hand.append(deck.deal())
-    d_hand.append(deck.deal())
-    deck.add_to_bottom(d_hand[0])
-    deck.add_to_bottom(d_hand[1])
-    deck.shuffle()
+    d_hand.append(deck6.deal())
+    d_hand.append(deck6.deal())
+    deck6.add_to_bottom(d_hand[0])
+    deck6.add_to_bottom(d_hand[1])
 
     for i in range(2):
         if (d_hand[i].rank == 'ace'):
@@ -481,18 +496,17 @@ def inf_policy_3():
             if d_value >= 17:
                 break
             if d_value < 17:
-                d_hand.append(deck.deal())
-                deck.add_to_bottom(d_hand[i])
+                d_hand.append(deck6.deal())
+                deck6.add_to_bottom(d_hand[i])
                 if (d_hand[i].rank == 'ace'):
                     d_hand[i].value = random.choice(ranks["ace"])
                 print("Dealer card drawn: ", d_hand[i].value)
                 print(d_value)
                 d_value += d_hand[i].value
 
-    deck.shuffle()
     print("Player Hand Value  ",
           p_value, "Dealer Hand Value: ", d_value)
-
+    print(deck6.__len__())
     if p_value == d_value or (p_value > 21 and d_value > 21):
         return 2  # tie
     if p_value > 21 or (d_value > p_value and d_value < 22):
@@ -502,8 +516,12 @@ def inf_policy_3():
 
 
 def single_policy_4():  # Always Hit Once Regardless
-    deck = Deck()
-    deck.shuffle()
+    global deck4
+
+    if deck4.__len__() < 26:
+        deck4 = Deck()
+        deck4.shuffle()
+
     print("SINGLE DECK POLICY 4 CALLED")
     p_hand = []
     p_value = 0
@@ -511,16 +529,16 @@ def single_policy_4():  # Always Hit Once Regardless
     d_hand = []
     d_value = 0
 
-    p_hand.append(deck.deal())
-    p_hand.append(deck.deal())
+    p_hand.append(deck4.deal())
+    p_hand.append(deck4.deal())
     for i in range(2):
         if (p_hand[i].rank == 'ace'):
             p_hand[i].value = random.choice(ranks["ace"])
     p_value = p_hand[0].value + p_hand[1].value
     print("Initial Hand: ", p_hand[0].value, p_hand[1].value)
 
-    d_hand.append(deck.deal())
-    d_hand.append(deck.deal())
+    d_hand.append(deck4.deal())
+    d_hand.append(deck4.deal())
 
     for i in range(2):
         if (d_hand[i].rank == 'ace'):
@@ -533,7 +551,7 @@ def single_policy_4():  # Always Hit Once Regardless
             break
         if p_value == 21:
             break
-        p_hand.append(deck.deal())
+        p_hand.append(deck4.deal())
         if (p_hand[i].rank == 'ace'):
             p_hand[i].value = random.choice(ranks["ace"])
         print("Card drawn: ", p_hand[i].value)
@@ -545,7 +563,7 @@ def single_policy_4():  # Always Hit Once Regardless
             if d_value >= 17:
                 break
             if d_value < 17:
-                d_hand.append(deck.deal())
+                d_hand.append(deck4.deal())
                 if (d_hand[i].rank == 'ace'):
                     d_hand[i].value = random.choice(ranks["ace"])
                 print("Dealer card drawn: ", d_hand[i].value)
@@ -564,8 +582,8 @@ def single_policy_4():  # Always Hit Once Regardless
 
 
 def inf_policy_4():
-    deck = Deck()
-    deck.shuffle()
+    global deck6
+
     print("INF DECK POLICY 4 CALLED")
     p_hand = []
     p_value = 0
@@ -573,11 +591,10 @@ def inf_policy_4():
     d_hand = []
     d_value = 0
 
-    p_hand.append(deck.deal())
-    p_hand.append(deck.deal())
-    deck.add_to_bottom(p_hand[0])
-    deck.add_to_bottom(p_hand[1])
-    deck.shuffle()
+    p_hand.append(deck6.deal())
+    p_hand.append(deck6.deal())
+    deck6.add_to_bottom(p_hand[0])
+    deck6.add_to_bottom(p_hand[1])
 
     for i in range(2):
         if (p_hand[i].rank == 'ace'):
@@ -585,11 +602,10 @@ def inf_policy_4():
     p_value = p_hand[0].value + p_hand[1].value
     print("Initial Hand: ", p_hand[0].value, p_hand[1].value)
 
-    d_hand.append(deck.deal())
-    d_hand.append(deck.deal())
-    deck.add_to_bottom(d_hand[0])
-    deck.add_to_bottom(d_hand[1])
-    deck.shuffle()
+    d_hand.append(deck6.deal())
+    d_hand.append(deck6.deal())
+    deck6.add_to_bottom(d_hand[0])
+    deck6.add_to_bottom(d_hand[1])
 
     for i in range(2):
         if (d_hand[i].rank == 'ace'):
@@ -602,32 +618,30 @@ def inf_policy_4():
             break
         if p_value == 21:
             break
-        p_hand.append(deck.deal())
-        deck.add_to_bottom(p_hand[i])
+        p_hand.append(deck6.deal())
+        deck6.add_to_bottom(p_hand[i])
         if (p_hand[i].rank == 'ace'):
             p_hand[i].value = random.choice(ranks["ace"])
         print("Card drawn: ", p_hand[i].value)
         p_value += p_hand[i].value
 
-    deck.shuffle()
     # Must hit if dealer's hand is not 17+
     if p_value <= 21:
         for i in range(2, 52):
             if d_value >= 17:
                 break
             if d_value < 17:
-                d_hand.append(deck.deal())
-                deck.add_to_bottom(d_hand[i])
+                d_hand.append(deck6.deal())
+                deck6.add_to_bottom(d_hand[i])
                 if (d_hand[i].rank == 'ace'):
                     d_hand[i].value = random.choice(ranks["ace"])
                 print("Dealer card drawn: ", d_hand[i].value)
                 print(d_value)
                 d_value += d_hand[i].value
 
-    deck.shuffle()
     print("Player Hand Value  ",
           p_value, "Dealer Hand Value: ", d_value)
-
+    print(deck6.__len__())
     if p_value == d_value or (p_value > 21 and d_value > 21):
         return 2  # tie
     if p_value > 21 or (d_value > p_value and d_value < 22):
@@ -637,9 +651,12 @@ def inf_policy_4():
 
 
 def single_policy_5():  # 5. Always hit twice regardless
+    global deck5
 
-    deck = Deck()
-    deck.shuffle()
+    if deck5.__len__() < 26:
+        deck5 = Deck()
+        deck5.shuffle()
+
     print("SINGLE DECK POLICY 5 CALLED")
     p_hand = []
     p_value = 0
@@ -647,16 +664,16 @@ def single_policy_5():  # 5. Always hit twice regardless
     d_hand = []
     d_value = 0
 
-    p_hand.append(deck.deal())
-    p_hand.append(deck.deal())
+    p_hand.append(deck5.deal())
+    p_hand.append(deck5.deal())
     for i in range(2):
         if (p_hand[i].rank == 'ace'):
             p_hand[i].value = random.choice(ranks["ace"])
     p_value = p_hand[0].value + p_hand[1].value
     print("Initial Hand: ", p_hand[0].value, p_hand[1].value)
 
-    d_hand.append(deck.deal())
-    d_hand.append(deck.deal())
+    d_hand.append(deck5.deal())
+    d_hand.append(deck5.deal())
 
     for i in range(2):
         if (d_hand[i].rank == 'ace'):
@@ -669,7 +686,7 @@ def single_policy_5():  # 5. Always hit twice regardless
             break
         if p_value == 21:
             break
-        p_hand.append(deck.deal())
+        p_hand.append(deck5.deal())
         if (p_hand[i].rank == 'ace'):
             p_hand[i].value = random.choice(ranks["ace"])
         print("Card drawn: ", p_hand[i].value)
@@ -681,7 +698,7 @@ def single_policy_5():  # 5. Always hit twice regardless
             if d_value >= 17:
                 break
             if d_value < 17:
-                d_hand.append(deck.deal())
+                d_hand.append(deck5.deal())
                 if (d_hand[i].rank == 'ace'):
                     d_hand[i].value = random.choice(ranks["ace"])
                 print("Dealer card drawn: ", d_hand[i].value)
@@ -700,8 +717,8 @@ def single_policy_5():  # 5. Always hit twice regardless
 
 
 def inf_policy_5():
-    deck = Deck()
-    deck.shuffle()
+    global deck6
+
     print("INF DECK POLICY 5 CALLED")
     p_hand = []
     p_value = 0
@@ -709,11 +726,10 @@ def inf_policy_5():
     d_hand = []
     d_value = 0
 
-    p_hand.append(deck.deal())
-    p_hand.append(deck.deal())
-    deck.add_to_bottom(p_hand[0])
-    deck.add_to_bottom(p_hand[1])
-    deck.shuffle()
+    p_hand.append(deck6.deal())
+    p_hand.append(deck6.deal())
+    deck6.add_to_bottom(p_hand[0])
+    deck6.add_to_bottom(p_hand[1])
 
     for i in range(2):
         if (p_hand[i].rank == 'ace'):
@@ -721,11 +737,10 @@ def inf_policy_5():
     p_value = p_hand[0].value + p_hand[1].value
     print("Initial Hand: ", p_hand[0].value, p_hand[1].value)
 
-    d_hand.append(deck.deal())
-    d_hand.append(deck.deal())
-    deck.add_to_bottom(d_hand[0])
-    deck.add_to_bottom(d_hand[1])
-    deck.shuffle()
+    d_hand.append(deck6.deal())
+    d_hand.append(deck6.deal())
+    deck6.add_to_bottom(d_hand[0])
+    deck6.add_to_bottom(d_hand[1])
 
     for i in range(2):
         if (d_hand[i].rank == 'ace'):
@@ -738,30 +753,30 @@ def inf_policy_5():
             break
         if p_value == 21:
             break
-        p_hand.append(deck.deal())
-        deck.add_to_bottom(p_hand[i])
+        p_hand.append(deck6.deal())
+        deck6.add_to_bottom(p_hand[i])
         if (p_hand[i].rank == 'ace'):
             p_hand[i].value = random.choice(ranks["ace"])
         print("Card drawn: ", p_hand[i].value)
         p_value += p_hand[i].value
-    deck.shuffle()
+
     # Must hit if dealer's hand is not 17+
     if p_value <= 21:
         for i in range(2, 52):
             if d_value >= 17:
                 break
             if d_value < 17:
-                d_hand.append(deck.deal())
-                deck.add_to_bottom(d_hand[i])
+                d_hand.append(deck6.deal())
+                deck6.add_to_bottom(d_hand[i])
                 if (d_hand[i].rank == 'ace'):
                     d_hand[i].value = random.choice(ranks["ace"])
                 print("Dealer card drawn: ", d_hand[i].value)
                 print(d_value)
                 d_value += d_hand[i].value
-    deck.shuffle()
+
     print("Player Hand Value  ",
           p_value, "Dealer Hand Value: ", d_value)
-
+    print(deck6.__len__())
     if p_value == d_value or (p_value > 21 and d_value > 21):
         return 2  # tie
     if p_value > 21 or (d_value > p_value and d_value < 22):
@@ -813,7 +828,7 @@ def main():
     outcome10 = None
 
    # This is our for loop for grabbing wins and losses for each policy and version.
-    for i in range(10):
+    for i in range(100000):
         outcome1 = inf_policy_1()
         outcome2 = inf_policy_2()
         outcome3 = inf_policy_3()
@@ -897,16 +912,7 @@ def main():
     print("SINGLE POLICY 5 Wins: ",  win10,
           "Losses: ",  lose10, "Ties: ", tie10)
 
-    # labels = ['Win/loss']
-    # wins = [win1]
-    # losses = [lose1]
-    # width = 0.35       # the width of the bars: can also be len(x) sequen
-    # fig, ax = plt.subplots()
-    # ax.bar(labels[1], wins, width,  label='wins')
-    # ax.bar(labels[0], losses, width, label='losses')
-    # ax.set_title('Wins Loss ratio using Policy 1')
-    # ax.legend
-    # plt.show()
+
 ##############################################################################
     WLlabels = ['INF 1', 'INF 2', 'INF 3', 'INF 4', 'INF 5']
     infW = [win1, win2, win3, win4, win5]
@@ -932,7 +938,7 @@ def main():
     fig.tight_layout()
 
     plt.show()
-##############################################################################
+#############################################################################
     WLlabels2 = ['SINGLE 1', 'SINGLE 2', 'SINGLE 3', 'SINGLE 4', 'SINGLE 5']
     sW = [win6, win7, win8, win9, win10]
     sL = [lose6, lose7, lose8, lose9, lose10]
@@ -959,22 +965,6 @@ def main():
     plt.show()
 
 
-# wl = [win, lose]
-# print("Wins: ",  win, "Loses: ",  lose)
-# fig = plt.figure(figsize=(10, 5))
-# ax = fig.add_axes([0, 0, 1, 1])
-# wl.plot(kind='bar', fontsize=20)
-# plt.axis('equal')
-# ax.bar(win, height=1.0, width=0.5, color="blue")
-# plt.xlabel('Wins and Loses', fontsize=15)
-# plt.ylabel('Number of Wins and Loses', fontsize=15)
-# plt.title('David is POGGERS!', fontsize=15)
-# plt.show()
-# fig = plt.figure()
-# plt = fig.add_axes([0, 1])
-# plt.bar(win, lose)
-# plt.title("Policy 1 Single Deck Simulation Outcomes in W/L")
-# plt.show()
-#####################################
+##########################################################################
 if __name__ == "__main__":
     main()
