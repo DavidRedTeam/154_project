@@ -22,9 +22,9 @@ from sklearn.linear_model import Ridge
 
 class Game:
     def __init__(self):
-        self.policy = [1, 2]
-        self.doorNum = [100]  # [3, 6, 9, 20, 100]
-        self.count = [10, 50, 100, 200, 500, 1000]
+        self.policy = [4]
+        self.doorNum = [3, 6, 9, 20, 100]
+        self.count = [1000]  # [10, 50, 100, 200, 500, 1000]
 
     def Start(self):
         graphData1 = []
@@ -41,11 +41,15 @@ class Game:
                         winPer = self.Policy1(count, doorNum)
                     elif policy == 2:
                         winPer = self.Policy2(count, doorNum)
+                    elif policy == 3:
+                        winPer = self.Policy3(count, doorNum)
+                    elif policy == 4:
+                        winPer = self.Policy4(count, doorNum)
                     else:
                         print("Invalid Policy choice Bye!")
                         return
 
-                    if count == self.count[-1] and policy == 2:
+                    if count == self.count[-1] and policy == 4:
                         graphData1.append(
                             {
                                 "Strategy": policy,
@@ -213,7 +217,7 @@ plt.suptitle("Approximate Improvement Over Trials 1000 Doors")
 plt.show()
 """
 
-""" Strategy Probability Graphs
+# Strategy Probability Graphs
 names1 = [x["Doors"] for x in graphDatas[0]]
 values1 = [x["Average Win Probability"] for x in graphDatas[0]]
 
@@ -233,6 +237,5 @@ plt.plot(x, m * x + b, color="orange")
 
 plt.ylabel("Average Win Percentage")
 plt.xlabel("Number of Doors")
-plt.suptitle("Strategy 2 (with 1000 trials)")
+plt.suptitle("Strategy 4 (with 1000 trials)")
 plt.show()
-"""
