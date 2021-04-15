@@ -10,8 +10,11 @@
 #######################################################################
 
 # import numpy as np
+import numpy as np
 from numpy import random
 import matplotlib.pyplot as plt
+from sklearn.linear_model import LinearRegression
+from sklearn.linear_model import Ridge
 
 # doorNum = int(input("Enter number of Doors to use in Monty Hall Simulation: "))
 # policyNum = int(input("Enter Policy Number: "))
@@ -20,8 +23,8 @@ import matplotlib.pyplot as plt
 class Game:
     def __init__(self):
         self.policy = [1, 2]
-        self.doorNum = [3, 6, 9, 20, 100]
-        self.count = [10, 50, 100]  # , 200, 500, 1000]
+        self.doorNum = [100]  # [3, 6, 9, 20, 100]
+        self.count = [10, 50, 100, 200, 500, 1000]
 
     def Start(self):
         graphData1 = []
@@ -42,21 +45,21 @@ class Game:
                         print("Invalid Policy choice Bye!")
                         return
 
-                    if count == self.count[-1] and policy == 1:
+                    if count == self.count[-1] and policy == 2:
                         graphData1.append(
                             {
                                 "Strategy": policy,
-                                "Doors": str(doorNum),
+                                "Doors": doorNum,
                                 "Average Win Probability": winPer,
                             }
                         )
 
-                    if doorNum == self.doorNum[-1] and policy == 2:
+                    if doorNum == self.doorNum[-1] and policy == 1:
                         graphData2.append(
                             {
                                 "Trials": count,
-                                "Doors": str(doorNum),
-                                "Average Win Propability": winPer,
+                                "Doors": doorNum,
+                                "Average Win Probability": winPer,
                             }
                         )
                     """
@@ -185,22 +188,51 @@ Monty_Hall = Game()
 graphDatas = Monty_Hall.Start()
 # print(graphDatas)
 
-names1 = [x["Doors"] for x in graphDatas[0]]
-values1 = [x["Average Win Probability"] for x in graphDatas[0]]
-names2 = []
-# print(names, values)
+""" Approximate Improvement Over Trials
+trials1 = [x["Trials"] for x in graphDatas[1]]
+wins1 = [x["Average Win Probability"] for x in graphDatas[1]]
+
+namesSTR = [str(x) for x in trials1]
 
 plt.figure(figsize=(9, 3))
-# plt.plot(names1, values1)
-plt.bar(names1, values1)
-plt.plot(names1, values1, "-o", color="orange")
+plt.bar(trials1, wins1, 5)
+
+for i in range(len(trials1)):
+    plt.text(trials1[i] - 0.5, wins1[i] + 0.1, str(wins1[i]) + "%", size=8)
+
+plt.xticks(trials1, [str(x) for x in trials1])
+
+x = np.array(trials1)
+y = np.array(wins1)
+m, b = np.polyfit(x, y, 1)
+plt.plot(x, m * x + b, color="orange")
+
 plt.ylabel("Average Win Percentage")
-plt.xlabel("Number of Doors")
-plt.suptitle("Strategy 1")
+plt.xlabel("Number of Trials")
+plt.suptitle("Approximate Improvement Over Trials 1000 Doors")
 plt.show()
 """
-plt.plot([1, 2, 3, 4])
+
+""" Strategy Probability Graphs
+names1 = [x["Doors"] for x in graphDatas[0]]
+values1 = [x["Average Win Probability"] for x in graphDatas[0]]
+
+namesSTR = [str(x) for x in names1]
+
+plt.figure(figsize=(9, 3))
+plt.bar(names1, values1)
+
+for i in range(len(names1)):
+    plt.text(names1[i] - 0.5, values1[i] + 0.1, str(values1[i]) + "%", size=8)
 
 
+x = np.array(names1)
+y = np.array(values1)
+m, b = np.polyfit(x, y, 1)
+plt.plot(x, m * x + b, color="orange")
+
+plt.ylabel("Average Win Percentage")
+plt.xlabel("Number of Doors")
+plt.suptitle("Strategy 2 (with 1000 trials)")
 plt.show()
 """
