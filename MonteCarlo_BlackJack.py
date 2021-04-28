@@ -249,6 +249,7 @@ def inf_policy_1():
     print("Player Hand Value  ",
           p_value, "Dealer Hand Value: ", d_value)
 
+    deck6.shuffle()
     print(deck6.__len__())
     if p_value == d_value or (p_value > 21 and d_value > 21):
         return 2  # tie
@@ -394,7 +395,8 @@ def inf_policy_2():
 
     print("Player Hand Value  ",
           p_value, "Dealer Hand Value: ", d_value)
-    print(deck6.__len__())
+
+    deck6.shuffle()
     if p_value == d_value or (p_value > 21 and d_value > 21):
         return 2  # tie
     if p_value > 21 or (d_value > p_value and d_value < 22):
@@ -506,6 +508,8 @@ def inf_policy_3():
 
     print("Player Hand Value  ",
           p_value, "Dealer Hand Value: ", d_value)
+
+    deck6.shuffle()
     print(deck6.__len__())
     if p_value == d_value or (p_value > 21 and d_value > 21):
         return 2  # tie
@@ -641,7 +645,8 @@ def inf_policy_4():
 
     print("Player Hand Value  ",
           p_value, "Dealer Hand Value: ", d_value)
-    print(deck6.__len__())
+
+    deck6.shuffle()
     if p_value == d_value or (p_value > 21 and d_value > 21):
         return 2  # tie
     if p_value > 21 or (d_value > p_value and d_value < 22):
@@ -776,7 +781,8 @@ def inf_policy_5():
 
     print("Player Hand Value  ",
           p_value, "Dealer Hand Value: ", d_value)
-    print(deck6.__len__())
+
+    deck6.shuffle()
     if p_value == d_value or (p_value > 21 and d_value > 21):
         return 2  # tie
     if p_value > 21 or (d_value > p_value and d_value < 22):
@@ -828,7 +834,7 @@ def main():
     outcome10 = None
 
    # This is our for loop for grabbing wins and losses for each policy and version.
-    for i in range(100000):
+    for i in range(10000):
         outcome1 = inf_policy_1()
         outcome2 = inf_policy_2()
         outcome3 = inf_policy_3()
@@ -900,23 +906,59 @@ def main():
         if (outcome10 == 2):
             tie10 += 1
 
+    # Calculating win / loss percentages
+    # Infinite policy below
+    inftotal1 = win1 + lose1 + tie1
+    infpw1 = win1/inftotal1
+    infpl1 = lose1/inftotal1
     print("INF POLICY 1 Wins: ",  win1, "Losses: ",  lose1, "Ties: ", tie1)
+    inftotal2 = win2 + lose2 + tie2
+    infpw2 = win2/inftotal2
+    infpl2 = lose2/inftotal2
     print("INF POLICY 2 Wins: ",  win2, "Losses: ",  lose2, "Ties: ", tie2)
+    inftotal3 = win3 + lose3 + tie3
+    infpw3 = win3/inftotal3
+    infpl3 = lose3/inftotal3
     print("INF POLICY 3 Wins: ",  win3, "Losses: ",  lose3, "Ties: ", tie3)
+    inftotal4 = win4 + lose4 + tie4
+    infpw4 = win4/inftotal4
+    infpl4 = lose4/inftotal4
     print("INF POLICY 4 Wins: ",  win4, "Losses: ",  lose4, "Ties: ", tie4)
+    inftotal5 = win5 + lose5 + tie5
+    infpw5 = win5/inftotal5
+    infpl5 = lose5/inftotal5
     print("INF POLICY 5 Wins: ",  win5, "Losses: ",  lose5, "Ties: ", tie5)
+
+    # Single policy below (printing)
+    singletotal6 = win6 + lose6 + tie6
+    singlepw6 = win6/singletotal6
+    singlepl6 = lose6/singletotal6
     print("SINGLE POLICY 1 Wins: ",  win6, "Losses: ",  lose6, "Ties: ", tie6)
+    singletotal7 = win7 + lose7 + tie7
+    singlepw7 = win7/singletotal7
+    singlepl7 = lose7/singletotal7
     print("SINGLE POLICY 2 Wins: ",  win7, "Losses: ",  lose7, "Ties: ", tie7)
+    singletotal8 = win8 + lose8 + tie8
+    singlepw8 = win8/singletotal8
+    singlepl8 = lose8/singletotal8
     print("SINGLE POLICY 3 Wins: ",  win8, "Losses: ",  lose8, "Ties: ", tie8)
+    singletotal9 = win9 + lose9 + tie9
+    singlepw9 = win9/singletotal9
+    singlepl9 = lose9/singletotal9
     print("SINGLE POLICY 4 Wins: ",  win9, "Losses: ",  lose9, "Ties: ", tie9)
+    singletotal10 = win10 + lose10 + tie10
+    singlepw10 = win10/singletotal10
+    singlepl10 = lose10/singletotal10
     print("SINGLE POLICY 5 Wins: ",  win10,
           "Losses: ",  lose10, "Ties: ", tie10)
 
 
 ##############################################################################
     WLlabels = ['INF 1', 'INF 2', 'INF 3', 'INF 4', 'INF 5']
-    infW = [win1, win2, win3, win4, win5]
-    infL = [lose1, lose2, lose3, lose4, lose5]
+    # infW = [win1, win2, win3, win4, win5]
+    # infL = [lose1, lose2, lose3, lose4, lose5]
+    infW = [infpw1, infpw2, infpw3, infpw4, infpw5]
+    infL = [infpl1, infpl2, infpl3, infpl4, infpl5]
 
     x = np.arange(len(WLlabels))  # the label locations
     infWidth = 0.35  # the width of the bars
@@ -926,7 +968,7 @@ def main():
     rects2I = ax.bar(x + infWidth/2, infL, infWidth, label='Losses')
 
     # Add some text for labels, title and custom x-axis tick labels, etc.
-    ax.set_ylabel('Number of Wins/Losses')
+    ax.set_ylabel('Win/Loss percentages')
     ax.set_title('Infinite Deck Policy Wins and Losses')
     ax.set_xticks(x)
     ax.set_xticklabels(WLlabels)
@@ -940,8 +982,8 @@ def main():
     plt.show()
 #############################################################################
     WLlabels2 = ['SINGLE 1', 'SINGLE 2', 'SINGLE 3', 'SINGLE 4', 'SINGLE 5']
-    sW = [win6, win7, win8, win9, win10]
-    sL = [lose6, lose7, lose8, lose9, lose10]
+    sW = [singlepw6, singlepw7, singlepw8, singlepw9, singlepw10]
+    sL = [singlepl6, singlepl7, singlepl8, singlepl9, singlepl10]
 
     x2 = np.arange(len(WLlabels2))  # the label locations
     sWidth = 0.35  # the width of the bars
@@ -951,7 +993,7 @@ def main():
     rects2 = ax2.bar(x + sWidth/2, sL, sWidth, label='Losses')
 
     # Add some text for labels, title and custom x-axis tick labels, etc.
-    ax2.set_ylabel('Number of Wins/Losses')
+    ax2.set_ylabel('Win/Loss percentages')
     ax2.set_title('Single Deck Policy Wins and Losses')
     ax2.set_xticks(x2)
     ax2.set_xticklabels(WLlabels2)
