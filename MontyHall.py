@@ -1,8 +1,6 @@
 #######################################################################
 #   Monty Hall | CSCI 154
 #
-#   Reference: https://electronut.in/simple-python-matplotlib-implementation-of-conways-game-of-life/
-#
 #   Group: Mitchell Maltezo, Micah Mercado, David Andrade, Harpreet Ghag
 #
 #   Language: Python
