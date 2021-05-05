@@ -16,13 +16,22 @@ import matplotlib.pyplot as plt
 from sklearn.linear_model import LinearRegression
 from sklearn.linear_model import Ridge
 
-# doorNum = int(input("Enter number of Doors to use in Monty Hall Simulation: "))
-# policyNum = int(input("Enter Policy Number: "))
+"""
+As seen on Report 
+    1. Standard Monty Hall Problem
+        1.1 Always switch the door you’ve chosen.
+        1.2 Choose one door and never switch
+    2. Banana Variant Monty Hall Problem 
+        2.1 Always Switch the door you’ve chosen
+        2.2 Choose one door and never switch it.
+    3. Incremental Door Reveal
+        3.1 Always Switch the door you’ve chosen
+"""
 
 
 class Game:
     def __init__(self):
-        self.policy = [4]
+        self.policy = [0]
         self.doorNum = [3, 6, 9, 20, 100]
         self.count = [1000]  # [10, 50, 100, 200, 500, 1000]
 
@@ -35,21 +44,21 @@ class Game:
             for policy in self.policy:
                 # print("Strategy: " + str(policy))
                 for count in self.count:
-                    if policy == 0:
+                    if policy == 0:  # 3.1
                         winPer = self.Policy0(count, doorNum)
-                    elif policy == 1:
+                    elif policy == 1:  # 1.1
                         winPer = self.Policy1(count, doorNum)
-                    elif policy == 2:
+                    elif policy == 2:  # 1.2
                         winPer = self.Policy2(count, doorNum)
-                    elif policy == 3:
+                    elif policy == 3:  # 2.1
                         winPer = self.Policy3(count, doorNum)
-                    elif policy == 4:
+                    elif policy == 4:  # 2.2
                         winPer = self.Policy4(count, doorNum)
                     else:
                         print("Invalid Policy choice Bye!")
                         return
 
-                    if count == self.count[-1] and policy == 4:
+                    if count == self.count[-1] and policy == 0:
                         graphData1.append(
                             {
                                 "Strategy": policy,
@@ -58,7 +67,7 @@ class Game:
                             }
                         )
 
-                    if doorNum == self.doorNum[-1] and policy == 1:
+                    if doorNum == self.doorNum[-1] and policy == 0:
                         graphData2.append(
                             {
                                 "Trials": count,
@@ -79,7 +88,7 @@ class Game:
                 print("\n")"""
         return graphData1, graphData2
 
-    def Policy0(self, count, doorNum):  # Experiment
+    def Policy0(self, count, doorNum):  # Version 3.1
         # Host opens 1 door randomly at a time
         # 1-doorNum = doors possible with prize
         # Randomly switch to one of the remaining doors
@@ -116,39 +125,46 @@ class Game:
 
         return (right / count) * 100
 
-    def Policy1(self, count, doorNum):
+    def Policy1(self, count, doorNum):  # Version 1.1
         # The flip of Sticking with original selection is...
         # Randomly switch to one of the remaining doors
         return 100 - self.Policy2(count, doorNum)
 
-    def Policy2(self, count, doorNum):
+    def Policy2(self, count, doorNum):  # Version 1.2
         # Host opens 1 door randomly
         # 1-doorNum = doors possible with prize
         # Stick with your original selection.
 
         # 1/(1-doorNum) chance of winning
         right = 0
-        wrong = 0
         choice = 0
 
         for i in range(count):
             choice = random.randint(doorNum)
             if choice == self.prize:
                 right += 1
-            else:
-                wrong += 1
 
         return (right / count) * 100
 
-    def Policy3(self, count, doorNum):
+    def Policy3(self, count, doorNum):  # Version 2.1
         # The flip of Sticking with original selection is...
         # Randomly switch to one of the remaining doors
-        return 100 - self.Policy4(count, doorNum)
+        return self.Policy1(count, doorNum)
 
-        """right = 0
-        wrong = 0
+        """
+        @2 I trimmed the code down to this
+        Which was just opposite of Version 1.2 or Policy2
+            Which is Version 1.1 Policy 1
+        right = 0
         choice = 0
 
+        for i in range(count):
+            choice = random.randint(doorNum)
+            if choice != self.prize:
+                right += 1
+
+        ------------------------
+        @1 I originally wrote this code, but it summed up to 
         for i in range(count):
             choice = random.randint(doorNum)
 
@@ -159,31 +175,29 @@ class Game:
             if slipDoor == self.prize:
                 right += 1
             elif choice == self.prize:
-                wrong += 1
+                pass
             else:
                 right += 1
 
-        return (right / count) * 100"""
+        return (right / count) * 100
+        """
 
-    def Policy4(self, count, doorNum):
+    def Policy4(self, count, doorNum):  # Version 2.2
         # Host opens 1 door randomly
         # 1-doorNum = doors possible with prize
         # Stick with your original selection.
 
         # 1/(1-doorNum) chance of winning
         right = 0
-        wrong = 0
         choice = 0
 
         for i in range(count):
             choice = random.randint(doorNum)
             slipDoor = choice
             while choice == slipDoor:  # choice of player cannot equal random goat door
-                slipDoor = random.randint(doorNum)
+                slipDoor = random.randint(doorNum)  # choose a random door
             if choice == self.prize or slipDoor == self.prize:
                 right += 1
-            else:
-                wrong += 1
 
         return (right / count) * 100
 
@@ -237,5 +251,5 @@ plt.plot(x, m * x + b, color="orange")
 
 plt.ylabel("Average Win Percentage")
 plt.xlabel("Number of Doors")
-plt.suptitle("Strategy 4 (with 1000 trials)")
+plt.suptitle("Always Change Door, After a Door is Revealed")
 plt.show()
