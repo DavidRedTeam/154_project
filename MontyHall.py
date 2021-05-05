@@ -31,9 +31,12 @@ As seen on Report
 
 class Game:
     def __init__(self):
-        self.policy = [0]
-        self.doorNum = [3, 6, 9, 20, 100]
-        self.count = [1000]  # [10, 50, 100, 200, 500, 1000]
+        self.policy = [1]
+        # if you want to focus on Door numbers then increase the array to full
+        # as seen in comment
+        # The current setup is for Approximate Improvement Over Trials
+        self.doorNum = [100]  # [3, 6, 9, 20, 100]
+        self.count = [10, 50, 100, 200, 500, 1000]  # [1000]
 
     def Start(self):
         graphData1 = []
@@ -58,7 +61,7 @@ class Game:
                         print("Invalid Policy choice Bye!")
                         return
 
-                    if count == self.count[-1] and policy == 0:
+                    if count == self.count[-1]:
                         graphData1.append(
                             {
                                 "Strategy": policy,
@@ -67,7 +70,7 @@ class Game:
                             }
                         )
 
-                    if doorNum == self.doorNum[-1] and policy == 0:
+                    if doorNum == self.doorNum[-1]:
                         graphData2.append(
                             {
                                 "Trials": count,
@@ -206,7 +209,7 @@ Monty_Hall = Game()
 graphDatas = Monty_Hall.Start()
 # print(graphDatas)
 
-""" Approximate Improvement Over Trials
+# Approximate Improvement Over Trials
 trials1 = [x["Trials"] for x in graphDatas[1]]
 wins1 = [x["Average Win Probability"] for x in graphDatas[1]]
 
@@ -227,8 +230,9 @@ plt.plot(x, m * x + b, color="orange")
 
 plt.ylabel("Average Win Percentage")
 plt.xlabel("Number of Trials")
-plt.suptitle("Approximate Improvement Over Trials 1000 Doors")
+plt.suptitle("Approximate Improvement Over Trials 100 Doors")
 plt.show()
+
 """
 
 # Strategy Probability Graphs
@@ -247,9 +251,10 @@ for i in range(len(names1)):
 x = np.array(names1)
 y = np.array(values1)
 m, b = np.polyfit(x, y, 1)
-plt.plot(x, m * x + b, color="orange")
+# plt.plot(x, m * x + b, color="orange")
 
 plt.ylabel("Average Win Percentage")
 plt.xlabel("Number of Doors")
-plt.suptitle("Always Change Door, After a Door is Revealed")
+plt.suptitle("3.1 Always Change Door, After Door is Revealed.")
 plt.show()
+"""
